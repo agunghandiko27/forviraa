@@ -1,39 +1,20 @@
-# 🌿 For Viraa
+# 💌 For Viraa
 
-Sebuah proyek web sederhana berisi pesan, permainan, dan momen spesial — dibuat khusus untuk Selvira Maya Intan. Dirancang dengan detail, rasa, dan ketulusan.
+Sebuah kumpulan halaman cinta sederhana yang dibuat dengan penuh perasaan.
 
----
+## ✨ Isi Halaman:
+- `home.html` — Halaman utama berisi kata cinta
+- `surat.html` — Surat spesial untuk Viraa
+- `games.html` — Kumpulan mini games seru
+- `spin.html` — Roda keberuntungan
+- `tebak.html` — Tebak-tebakan cinta
+- dan lainnya...
 
-## 💡 Tentang
+## 📂 Aset:
+Semua gambar, audio, dan stiker ada di folder `assets/`
 
-**For Viraa** adalah website statis yang berisi:
-- 💌 Catatan cinta dan kutipan harian
-- 🧩 Game ringan bertema cinta
-- 🎁 Halaman interaktif dengan desain lembut dan personal
-
-Dibuat untuk memberikan senyum kecil, mengabadikan rasa.
-
----
-
-## 📄 Struktur Halaman
-
-| Halaman        | Fungsi                                        |
-|----------------|-----------------------------------------------|
-| `index.html`   | Halaman pembuka                              |
-| `home.html`    | Love notes harian + quote otomatis            |
-| `surat.html`   | Surat cinta personal                          |
-| `games.html`   | Menu permainan interaktif                     |
-| `tebak.html`   | Tebak perasaan                                |
-| `puzzle.html`  | Puzzle foto                                   |
-| `spin.html`    | Spin wheel sederhana                          |
-| `catchlove.html` | Mini game tangkap hati                      |
+## 💻 Cara buka:
+Cukup buka file `index.html` di browser HP atau laptop kamu.
 
 ---
-
-## 📦 Cara Menjalankan
-
-Tidak membutuhkan backend. Cukup clone dan buka:
-
-```bash
-git clone https://github.com/agunghandiko27/forviraa.git
-cd forviraa
+Dibuat dengan penuh cinta oleh **Agung Handiko** untuk **Selvira Maya Intan** 💛
