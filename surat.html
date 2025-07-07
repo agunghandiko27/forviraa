@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Surat Untukmu 💌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #fffefb 0%, #f7f5f0 100%);
+      overflow: hidden;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .modal-content {
+      background: transparent;
+      padding: 0;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .modal-content img {
+      width: 180px;
+      height: auto;
+      margin-bottom: 1rem;
+    }
+
+    .button-wrapper {
+      margin-top: 1rem;
+    }
+
+    .open-btn {
+      background: #c7b198;
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 6px;
+      background: #c7b198;
+      border-radius: 10px;
+      margin-top: 1rem;
+      transition: width 2s ease;
+      display: none;
+    }
+
+    .letter-container {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .letter-container h1 {
+      text-align: center;
+      font-family: 'Pacifico', cursive;
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+      color: #3e3e3e;
+    }
+
+    .card {
+      background: #fffefb;
+      border: 1px solid #eee;
+      border-radius: 16px;
+      padding: 1.2rem 1rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .signature {
+      text-align: right;
+      font-style: italic;
+      color: #a38d75;
+      margin-top: 2rem;
+    }
+
+    .gift {
+      display: block;
+      margin: 2rem auto 1rem;
+      width: 100px;
+      height: auto;
+    }
+
+    .btn-back {
+      display: block;
+      text-align: center;
+      margin: 2rem auto;
+      background: #c7b198;
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 500;
+      width: fit-content;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 600px) {
+      .letter-container h1 {
+        font-size: 1.6rem;
+      }
+
+      .modal-content img {
+        width: 180px;
+      }
+
+      .modal-content {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Modal Amplop -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <img src="assets/sanrio.gif" alt="Amplop" />
+    <div class="button-wrapper" id="buttonWrapper">
+      <button class="open-btn" id="openLetterBtn">Buka Surat</button>
+    </div>
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+</div>
+
+<!-- Konten Surat -->
+<div class="letter-container" id="letterContainer">
+  <h1>Selamat Ulang Tahun 🌿</h1>
+  <div id="letterContent"></div>
+  <p class="signature">— Dari seseorang yang sangat bersyukur memilikimu</p>
+  <img src="assets/gift.gif" alt="Hadiah" class="gift" />
+  <a href="home.html" class="btn-back">Kembali ke Home</a>
+</div>
+
+<!-- Musik -->
+<audio id="bgm" src="assets/music.mp3" autoplay loop></audio>
+
+<script>
+  const openBtn = document.getElementById("openLetterBtn");
+  const modal = document.getElementById("modal");
+  const letter = document.getElementById("letterContainer");
+  const content = document.getElementById("letterContent");
+  const bgm = document.getElementById("bgm");
+  const progressBar = document.getElementById("progressBar");
+
+  const paragraphs = [
+    "Selamat ulang tahun nengg, kamu yang selalu bisa membuat segala hal menjadi lebih sederhana dan lebih hangat hanya dengan kehadiranmu.",
+    "Hari ini bukan hanya tentang usia, tapi tentang bagaimana kamu telah tumbuh, bertahan, dan tetap menjadi versi terbaik dari dirimu meski dunia tak selalu ramah.",
+    "Aku ingin kamu tau, setiap detail kecil tentang dirimu adalah hal yang selalu aku syukuri. Senyummu, caramu tertawa, bahkan diam mu yang kadang penuh makna.",
+    "Terima kasih karena tetap memilih hadir, tetap menjadi kamu, yang lembut, yang kuat, dan yang mengerti meski tanpa banyak kata.",
+    "Kalau kamu lelah, jangan lupa bahwa kamu selalu punya tempat untuk pulang, untuk tenang, untuk didengar. Kamu selalu punya aku.",
+    "Doaku hari ini: semoga kamu dikelilingi cinta yang tidak ribut, keberuntungan yang tidak pamer, dan kebahagiaan yang datang dalam bentuk-bentuk sederhana.",
+    "Aku tidak bisa janjikan segalanya akan mudah, tapi aku bisa janji akan tetap disini, tumbuh bersamamu, satu langkah kecil setiap harinya.",
+    "Selamat ulang tahun, nengg. Aku bangga padamu. Dan aku akan selalu, selalu di sini — tanpa syarat, dan tanpa alasan."
+  ];
+
+  function showAllParagraphs(list, container) {
+    list.forEach((text, index) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.textContent = text;
+      container.appendChild(card);
+      setTimeout(() => card.classList.add("visible"), 100 + index * 200);
+    });
+  }
+
+  openBtn.addEventListener("click", () => {
+    openBtn.style.display = "none";
+    progressBar.style.display = "block";
+    progressBar.style.width = "0%";
+
+    setTimeout(() => {
+      progressBar.style.width = "100%";
+    }, 100);
+
+    setTimeout(() => {
+      modal.style.display = "none";
+      letter.style.display = "block";
+      document.body.style.overflow = "auto";
+      bgm.play().catch(() => {});
+      showAllParagraphs(paragraphs, content);
+    }, 2200);
+  });
+</script>
+
+</body>
+</html>

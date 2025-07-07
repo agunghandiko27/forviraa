@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Untuk Selvira Maya Intan 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #d8c3a5;
+      --bg: #fdfaf6;
+      --accent: #e98074;
+      --text: #4b3f3f;
+    }
+
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom right, #fdfaf6, #f3ece3);
+      color: var(--text);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.4rem;
+      border-radius: 14px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 1rem auto;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: var(--accent);
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      max-width: 600px;
+      margin: 1.5rem auto;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    .reason {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .reason.show {
+      opacity: 1;
+    }
+
+    .letter {
+      display: none;
+      margin-top: 1rem;
+      font-style: italic;
+      line-height: 1.7;
+      color: #5c4a4a;
+    }
+
+    .puzzle {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .piece {
+      width: 120px;
+      height: 100px;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .piece.active {
+      background: var(--accent);
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Buat Neng Vira💖</h1>
+
+  <!-- Alasan Cinta -->
+  <div class="card">
+    <h2>10 Alasan Aku Cinta Kamu</h2>
+    <button onclick="tampilkanAlasan()">Tampilkan Satu Alasan 💌</button>
+    <div id="alasanContainer"></div>
+  </div>
+
+  <!-- Surat Cinta -->
+  <div class="card">
+    <h2>Buka Surat Aku📩</h2>
+    <button onclick="toggleSurat()">Buka / Tutup Surat</button>
+    <div id="surat" class="letter">
+      Haii nengg..<br><br>
+      Mungkin aku bukan yang paling romantis, tapi setiap hariku berisi kamu.  
+      Setiap pagi aku bangun dengan satu harapan: bisa membuatmu bahagia.<br><br>
+      Terima kasih sudah selalu hadir dalam hidupku, menjadi cahaya dalam hari-hariku,  
+      dan menjadi tempat pulang paling nyaman.
+      <br><br>
+      - Agung 💗
+    </div>
+  </div>
+
+  <!-- Puzzle Cinta -->
+  <div class="card">
+    <h2>Puzzle Cinta 🧩</h2>
+    <p>Klik tiap bagian untuk tahu apa yang aku suka dari kamu.</p>
+    <div class="puzzle">
+      <div class="piece" onclick="togglePiece(this, 'Senyummu')">?</div>
+      <div class="piece" onclick="togglePiece(this, 'Suaramu')">?</div>
+      <div class="piece" onclick="togglePiece(this, 'Tatapanmu')">?</div>
+      <div class="piece" onclick="togglePiece(this, 'Cara kamu peduli')">?</div>
+      <div class="piece" onclick="togglePiece(this, 'Kesabaran kamu')">?</div>
+      <div class="piece" onclick="togglePiece(this, 'Semangat kamu')">?</div>
+    </div>
+  </div>
+
+  <footer>Created with 💕 by Agung for Selvira Maya Intan — “Kamu adalah rumah.”</footer>
+
+  <script>
+    const alasan = [
+      "Kamu selalu sabar sama aku.",
+      "Tawa kamu bikin hariku cerah.",
+      "Aku merasa cukup saat bersamamu.",
+      "Kamu perhatian banget, bahkan untuk hal kecil.",
+      "Tatapan matamu penuh cinta.",
+      "Aku bisa jadi diriku sendiri saat bersamamu.",
+      "Kamu selalu mendukung mimpiku.",
+      "Kita bisa ngobrol apa aja tanpa bosan.",
+      "Pelukmu adalah tempat ternyaman.",
+      "Aku cinta semuanya tentang kamu."
+    ];
+
+    let index = 0;
+
+    function tampilkanAlasan() {
+      if (index >= alasan.length) return;
+      const container = document.getElementById("alasanContainer");
+      const p = document.createElement("p");
+      p.className = "reason show";
+      p.textContent = `${index + 1}. ${alasan[index]}`;
+      container.appendChild(p);
+      index++;
+    }
+
+    function toggleSurat() {
+      const surat = document.getElementById("surat");
+      surat.style.display = surat.style.display === "block" ? "none" : "block";
+    }
+
+    function togglePiece(el, text) {
+      if (el.classList.contains("active")) {
+        el.textContent = "?";
+        el.classList.remove("active");
+      } else {
+        el.textContent = text;
+        el.classList.add("active");
+      }
+    }
+  </script>
+
+</body>
+</html>

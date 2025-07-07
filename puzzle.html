@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Puzzle of Love 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #c7b198;
+      --bg-light: #fdfcf8;
+      --accent: #a68f77;
+      --text-dark: #3e3e3e;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    #timer {
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    #puzzle {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 4px;
+      margin-bottom: 1.5rem;
+    }
+
+    .tile {
+      width: 100px;
+      height: 100px;
+      background-image: url('assets/selvira.jpg'); /* Ganti dengan foto ukuran 800x800 */
+      background-size: 300px 300px;
+      background-repeat: no-repeat;
+      border-radius: 8px;
+      cursor: grab;
+      transition: transform 0.2s ease;
+    }
+
+    .tile.dragging {
+      opacity: 0.4;
+      transform: scale(0.95);
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      padding: 0.6rem 1.4rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: var(--accent);
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #aaa;
+      font-style: italic;
+      text-align: center;
+    }
+
+    @media screen and (max-width: 400px) {
+      #puzzle {
+        transform: scale(0.85);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Puzzle of Love 💖</h1>
+  <p class="subtitle">Susun potongan wajah kesayanganku jadi satu 💘</p>
+
+  <div id="timer">⏱ Waktu: <span id="time">00:00</span></div>
+  <div id="puzzle"></div>
+  <button id="startBtn">▶️ Start Game</button>
+
+  <footer>Created with 💖 by Agung for Selvira — “You complete me.”</footer>
+
+  <script>
+    const puzzle = document.getElementById("puzzle");
+    const timeEl = document.getElementById("time");
+    const startBtn = document.getElementById("startBtn");
+
+    const SIZE = 3;
+    const TILE_SIZE = 100; // ukuran 1 tile
+    let tiles = [];
+    let positions = [];
+    let timerInterval;
+    let seconds = 0;
+
+    for (let row = 0; row < SIZE; row++) {
+      for (let col = 0; col < SIZE; col++) {
+        positions.push({ row, col });
+      }
+    }
+
+    function createTiles() {
+      puzzle.innerHTML = "";
+      tiles.forEach((pos, i) => {
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        tile.style.backgroundPosition = `-${pos.col * TILE_SIZE}px -${pos.row * TILE_SIZE}px`;
+        tile.setAttribute("draggable", "true");
+        tile.dataset.index = i;
+
+        tile.addEventListener("dragstart", dragStart);
+        tile.addEventListener("dragover", dragOver);
+        tile.addEventListener("drop", drop);
+        tile.addEventListener("dragend", dragEnd);
+
+        puzzle.appendChild(tile);
+      });
+    }
+
+    function startGame() {
+      clearInterval(timerInterval);
+      seconds = 0;
+      updateTimer();
+      startTimer();
+
+      tiles = [...positions];
+      shuffleArray(tiles);
+      createTiles();
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    let draggedIndex = null;
+
+    function dragStart(e) {
+      draggedIndex = e.target.dataset.index;
+      e.target.classList.add("dragging");
+    }
+
+    function dragOver(e) {
+      e.preventDefault();
+    }
+
+    function drop(e) {
+      e.preventDefault();
+      const targetIndex = e.target.dataset.index;
+      [tiles[draggedIndex], tiles[targetIndex]] = [tiles[targetIndex], tiles[draggedIndex]];
+      createTiles();
+      checkWin();
+    }
+
+    function dragEnd(e) {
+      e.target.classList.remove("dragging");
+    }
+
+    function checkWin() {
+      const isWin = tiles.every((tile, i) =>
+        tile.row === positions[i].row && tile.col === positions[i].col
+      );
+      if (isWin) {
+        clearInterval(timerInterval);
+        setTimeout(() => {
+          alert("🎉 Yeayy ayangg Vira GG! Puzzle selesai dalam " + formatTime(seconds) + " ❤️");
+        }, 300);
+      }
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        seconds++;
+        updateTimer();
+      }, 1000);
+    }
+
+    function updateTimer() {
+      timeEl.textContent = formatTime(seconds);
+    }
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    // Tombol start game
+    startBtn.addEventListener("click", () => {
+      startGame();
+      startBtn.textContent = "🔄 Restart Game";
+    });
+
+    // Tampilkan gambar utuh di awal
+    tiles = [...positions];
+    createTiles();
+  </script>
+</body>
+</html>

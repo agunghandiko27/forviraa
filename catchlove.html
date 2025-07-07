@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catch the Love 💘</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #c7b198;
+      --bg-light: #fdfcf8;
+      --accent: #a68f77;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 2.4rem;
+      color: #a05070;
+      text-align: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-style: italic;
+      color: #888;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    #scoreBoard {
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    #gameArea {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      height: 65vh;
+      background: #fff5f5;
+      border: 3px dashed #eecaca;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(0,0,0,0.06);
+      touch-action: pan-x;
+    }
+
+    #player {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 70px;
+      background-image: url('assets/selvira.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      border-radius: 50%;
+      transition: left 0.1s ease-out;
+    }
+
+    .heart {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-image: url('assets/heart.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      animation: fall 3.5s linear forwards;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0.7; }
+    }
+
+    #gameOver {
+      display: none;
+      text-align: center;
+      color: crimson;
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.3rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      margin-top: 1.2rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      font-style: italic;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Catch the Love 💘</h1>
+  <div class="subtitle">Tangkap cintanya dengan gambarmu sendiri 😍</div>
+  <div id="scoreBoard">Skor: 0 | Terlewat: 0 | Highscore: 0</div>
+
+  <div id="gameArea">
+    <div id="player"></div>
+  </div>
+
+  <div id="gameOver">💔 Game Over! Banyak cinta yang jatuh...</div>
+  <button class="btn" onclick="startGame()">❤️ Mulai Game</button>
+
+  <footer>Created with 💕 by Agung for Selvira — “Kamu adalah rumah.”</footer>
+
+  <script>
+    const gameArea = document.getElementById('gameArea');
+    const player = document.getElementById('player');
+    const scoreBoard = document.getElementById('scoreBoard');
+    const gameOverText = document.getElementById('gameOver');
+
+    let score = 0;
+    let missed = 0;
+    let highscore = localStorage.getItem('highscore') || 0;
+    let playerX = 0;
+    let heartInterval;
+    let gameRunning = false;
+    const maxMiss = 3;
+
+    function updateScore() {
+      scoreBoard.textContent = `Skor: ${score} | Terlewat: ${missed} | Highscore: ${highscore}`;
+    }
+
+    function updatePlayer() {
+      const maxX = gameArea.clientWidth - player.offsetWidth;
+      if (playerX < 0) playerX = 0;
+      if (playerX > maxX) playerX = maxX;
+      player.style.left = `${playerX}px`;
+    }
+
+    function createHeart() {
+      if (!gameRunning) return;
+
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = `${Math.random() * (gameArea.clientWidth - 40)}px`;
+      gameArea.appendChild(heart);
+
+      let caught = false;
+
+      const fallCheck = setInterval(() => {
+        if (!gameRunning || !heart.parentElement) {
+          clearInterval(fallCheck);
+          return;
+        }
+
+        const heartRect = heart.getBoundingClientRect();
+        const playerRect = player.getBoundingClientRect();
+
+        if (
+          heartRect.bottom >= playerRect.top &&
+          heartRect.left < playerRect.right &&
+          heartRect.right > playerRect.left
+        ) {
+          caught = true;
+          score++;
+          updateScore();
+          heart.remove();
+          clearInterval(fallCheck);
+        }
+      }, 50);
+
+      heart.addEventListener('animationend', () => {
+        if (!caught && gameRunning) {
+          missed++;
+          updateScore();
+          heart.remove();
+          clearInterval(fallCheck);
+          if (missed >= maxMiss) endGame();
+        }
+      });
+    }
+
+    function startGame() {
+      score = 0;
+      missed = 0;
+      gameRunning = true;
+      updateScore();
+      gameOverText.style.display = 'none';
+      document.querySelectorAll('.heart').forEach(h => h.remove());
+      playerX = (gameArea.clientWidth - player.offsetWidth) / 2;
+      updatePlayer();
+
+      clearInterval(heartInterval);
+      heartInterval = setInterval(createHeart, 900);
+    }
+
+    function endGame() {
+      gameRunning = false;
+      clearInterval(heartInterval);
+      if (score > highscore) {
+        highscore = score;
+        localStorage.setItem('highscore', highscore);
+      }
+      updateScore();
+      gameOverText.style.display = 'block';
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (!gameRunning) return;
+      const step = 16;
+      if (e.key === 'ArrowLeft') playerX -= step;
+      if (e.key === 'ArrowRight') playerX += step;
+      updatePlayer();
+    });
+
+    // Touch (Mobile)
+    let touchStartX = 0;
+    gameArea.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    });
+
+    gameArea.addEventListener('touchmove', (e) => {
+      if (!gameRunning) return;
+      const deltaX = e.touches[0].clientX - touchStartX;
+      touchStartX = e.touches[0].clientX;
+      playerX += deltaX;
+      updatePlayer();
+    });
+
+    window.addEventListener('resize', () => {
+      if (!gameRunning) return;
+      playerX = (gameArea.clientWidth - player.offsetWidth) / 2;
+      updatePlayer();
+    });
+
+    updateScore();
+  </script>
+</body>
+</html>
